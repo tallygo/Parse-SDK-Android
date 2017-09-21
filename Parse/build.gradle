@@ -4,14 +4,20 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.github.kt3k.coveralls'
 apply plugin: 'com.jfrog.bintray'
 
-group = 'com.parse'
-version = '1.16.2-SNAPSHOT'
+group = 'com.tallygo'
+version = '1.16.2.5'
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
+def artifactoryUser = properties.getProperty('artifactory.user')
+def artifactoryPas = properties.getProperty('artifactory.pas')
 
 ext {
-    projDescription = 'A library that gives you access to the powerful Parse cloud platform from your Android app.'
-    artifact = 'parse-android'
-    projName = 'Parse-Android'
-    gitLink = 'https://github.com/parse-community/Parse-SDK-Android'
+    projDescription = 'TallyGo Android Parse Fork'
+    artifact = 'tallygo-parse-android'
+    projName = 'TallyGo-Parse-Android'
+    gitLink = 'https://tallygo.com'
 }
 buildscript {
     repositories {
@@ -281,18 +287,17 @@ publishing {
 apply plugin: "com.jfrog.artifactory"
 
 artifactory {
-    contextUrl = 'https://oss.jfrog.org'
+    contextUrl = 'https://tallygo3.jfrog.io/tallygo3'
     publish {
         repository {
-            repoKey = 'oss-snapshot-local' // The Artifactory repository key to publish to
-
-            username = System.getenv('BINTRAY_USER')
-            password = System.getenv('BINTRAY_API_KEY')
+            repoKey = 'libs-release-local'
+            username = artifactoryUser
+            password = artifactoryPas
             maven = true
         }
         defaults {
             publishArtifacts = true
-            publications('MyPublication')
+            publications ('MyPublication')
         }
     }
 }

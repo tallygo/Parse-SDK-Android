@@ -1,4 +1,5 @@
 -keepnames class com.parse.** { *; }
+-keepnames class com.tallygo.** { *; }
 
 # Required for Parse
 -keepattributes *Annotation*
