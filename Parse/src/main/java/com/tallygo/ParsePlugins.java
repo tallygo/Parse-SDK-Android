@@ -200,7 +200,7 @@ class ParsePlugins {
         File getParseDir() {
             synchronized (lock) {
                 if (parseDir == null) {
-                    parseDir = applicationContext.getDir("Parse", Context.MODE_PRIVATE);
+                    parseDir = applicationContext.getDir(Parse.COM_TALLY_GO, Context.MODE_PRIVATE);
                 }
                 return createFileDir(parseDir);
             }

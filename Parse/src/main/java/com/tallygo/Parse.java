@@ -38,6 +38,8 @@ public class Parse {
 
   public static final String COM_TALLY_GO = "com.tallygo";
 
+  private static final String TG_ANDROID_CLIENT_KEY = "WsBfoT8DyBWdZvSWrGV3WsBfoT8DyBWdZvSWrGV3";
+
   private static final String TAG = "com.tallygo.Parse";
 
     /**
@@ -439,16 +441,22 @@ public class Parse {
     }
   }
 
+  /**
+   * Uses a client key specified in this file to ensure that users of this class know that they
+   * are using the TallyGo fork of this SDK
+   * @return
+   * whether or not the user is the TallyGo SDK
+   */
   private static boolean checkIsTallyGo(Configuration configuration) {
-    switch (configuration.applicationId) {
-      case "yWWDPryz9EZZ1yeQg7SicmFJCSlGDx3kmu0vrSbk":
+    switch (configuration.clientKey) {
+      case TG_ANDROID_CLIENT_KEY:
       return true;
     }
 
     return false;
   }
 
-  static void destroy() {
+  public static void destroy() {
     ParseEventuallyQueue queue;
     synchronized (MUTEX) {
       queue = eventuallyQueue;
