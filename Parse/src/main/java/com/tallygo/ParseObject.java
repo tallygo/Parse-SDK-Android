@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.locks.Lock;
 
@@ -115,7 +116,7 @@ public class ParseObject implements Parcelable {
       private long createdAt = -1;
       private long updatedAt = -1;
       private boolean isComplete;
-      private Set<String> availableKeys = new HashSet<>();
+      private Set<String> availableKeys = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
       /* package */ Map<String, Object> serverData = new HashMap<>();
 
       public Init(String className) {
@@ -181,9 +182,7 @@ public class ParseObject implements Parcelable {
       }
 
       public T availableKeys(Collection<String> keys) {
-        for (String key : keys) {
-          availableKeys.add(key);
-        }
+        availableKeys.addAll(keys);
         return self();
       }
 
@@ -273,7 +272,8 @@ public class ParseObject implements Parcelable {
           : createdAt;
       serverData = Collections.unmodifiableMap(new HashMap<>(builder.serverData));
       isComplete = builder.isComplete;
-      availableKeys = new HashSet<>(builder.availableKeys);
+      availableKeys = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+      availableKeys.addAll(builder.availableKeys);
     }
 
     /* package */ State(Parcel parcel, String clazz, ParseParcelDecoder decoder) {
@@ -293,7 +293,8 @@ public class ParseObject implements Parcelable {
       isComplete = parcel.readByte() == 1;
       List<String> available = new ArrayList<>();
       parcel.readStringList(available);
-      availableKeys = new HashSet<>(available);
+      availableKeys = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
+      availableKeys.addAll(available);
     }
 
     @SuppressWarnings("unchecked")
